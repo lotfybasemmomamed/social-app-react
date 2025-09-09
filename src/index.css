@@ -39,3 +39,7 @@ font-family: "Roboto", sans-serif;}
     @apply text-base font-medium leading-normal my-2;
   }
 }
+
+.btn{
+  @apply bg-purble hover:bg-purple-700
+}

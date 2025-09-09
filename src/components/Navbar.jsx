@@ -59,14 +59,14 @@ export default function Navbar() {
             
             {/* Logo */}
             <div className="flex-shrink-0">
-              <a href="#" className="flex items-center space-x-3 group">
+              <NavLink href="#" className="flex items-center space-x-3 group">
                 <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center transform group-hover:scale-105 transition-transform duration-300 shadow-lg">
                   <p className=" text-white text-2xl">S</p>
                 </div>
                 <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                   Social
                 </span>
-              </a>
+              </NavLink>
             </div>
 
             {/* Desktop Navigation */}

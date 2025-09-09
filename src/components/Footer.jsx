@@ -1,14 +1,15 @@
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 export default function Footer() {
-  const [email, setEmail] = useState('');
-  const [language, setLanguage] = useState('English (US)');
+  const [email, setEmail] = useState("");
+  const [language, setLanguage] = useState("English (US)");
 
   const handleSubscribe = () => {
     if (email.trim()) {
       // Handle subscription logic here
-      console.log('Subscribing email:', email);
-      setEmail('');
+      console.log("Subscribing email:", email);
+      setEmail("");
     }
   };
 
@@ -18,28 +19,27 @@ export default function Footer() {
       address: "Huntersville,",
       address2: "957 Hill Hills Suite 491, United States",
       phone: "+12(3) 456 7890 1234",
-      email: "company@name.com"
+      email: "company@name.com",
     },
     {
-      city: "ROME", 
+      city: "ROME",
       address: "Piazza di Spagna,",
       address2: "00187 Roma RM, Italy",
       phone: "+12(3) 456 7890 1234",
-      email: "company@name.it"
+      email: "company@name.it",
     },
     {
       city: "LONDON",
       address: "Fulham Rd,",
-      address2: "London SW6 1HS, United Kingdom", 
+      address2: "London SW6 1HS, United Kingdom",
       phone: "+12(3) 456 7890 1234",
-      email: "company@name.co.uk"
-    }
+      email: "company@name.co.uk",
+    },
   ];
 
   return (
     <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        
         {/* Offices Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           {offices.map((office, index) => (
@@ -47,18 +47,18 @@ export default function Footer() {
               <h3 className="text-lg font-bold text-gray-900 dark:text-white tracking-wide">
                 {office.city}
               </h3>
-              
+
               <div className="space-y-3 text-gray-600 dark:text-gray-400">
                 <div>
                   <p className="text-sm">{office.address}</p>
                   <p className="text-sm">{office.address2}</p>
                 </div>
-                
+
                 <div className="flex items-center space-x-2">
                   <i className="fas fa-phone text-purple-600 w-4"></i>
                   <span className="text-sm">Office: {office.phone}</span>
                 </div>
-                
+
                 <div className="flex items-center space-x-2">
                   <i className="fas fa-envelope text-purple-600 w-4"></i>
                   <span className="text-sm">Support: {office.email}</span>
@@ -71,13 +71,12 @@ export default function Footer() {
         {/* Newsletter Section */}
         <div className="border-t border-gray-200 dark:border-gray-700 pt-8 mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            
             <div className="md:w-1/3">
               <h4 className="text-base font-medium text-gray-900 dark:text-white mb-1">
                 Sign up to our newsletter
               </h4>
             </div>
-            
+
             <div className="md:w-2/3">
               <div className="flex gap-3">
                 <div className="flex-1 relative">
@@ -104,25 +103,26 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            
             {/* Logo and Copyright */}
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <i className="fas fa-users text-white text-lg"></i>
-                </div>
-                <span className="text-xl font-bold text-purple-600 dark:text-purple-400">
-                  Social
-                </span>
+              <div className="flex-shrink-0">
+                <NavLink href="#" className="flex items-center space-x-3 group">
+                  <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center transform group-hover:scale-105 transition-transform duration-300 shadow-lg">
+                    <p className=" text-white text-2xl">S</p>
+                  </div>
+                  <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    Social
+                  </span>
+                </NavLink>
               </div>
-              
+
               <div className="hidden md:block w-px h-6 bg-gray-300 dark:bg-gray-600"></div>
-              
+
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 © 2021-2024 Social™. All Rights Reserved.
               </p>
             </div>
-            
+
             {/* Language Selector */}
             <div className="flex items-center space-x-2">
               <i className="fas fa-globe text-gray-400"></i>
