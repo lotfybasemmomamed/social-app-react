@@ -1,14 +1,15 @@
-import Navbar from "./components/Navbar"
-
+import { Route,Routes } from "react-router-dom";
+import Website from "./components/Website";
 
 function App() {
-
   return (
-    <div className="bg-red-500">
-<Navbar/>
-
-    </div>
-  )
+    <Routes>
+      <Route>
+        <Route element={<Website/>} path="/"/>
+      </Route>
+      
+    </Routes>
+  );
 }
 
-export default App
+export default App;
