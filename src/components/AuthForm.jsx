@@ -57,7 +57,7 @@ export default function AuthForm({ btnText, type }) {
       const res = await login(loginData);
       const token = res.data.token;
       console.log("token", token);
-      cookie.set("Bearer", token);
+      cookie.set("Bearer", token,{ path: "/" });
       navigate("/");
     }
     
@@ -68,7 +68,7 @@ export default function AuthForm({ btnText, type }) {
       } else {
         await register(payload);
 
-        _login();
+       await  _login();
         // navigate("/");
       }
     } catch (err) {

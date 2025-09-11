@@ -7,7 +7,7 @@ export default function Website() {
   return (
     <div>
       <Navbar />
-      <div className="my-3 min-h-[100vh]">
+      <div className="mt-20 min-h-[100vh]">
         <Outlet />
       </div>
 
