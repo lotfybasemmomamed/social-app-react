@@ -1,6 +1,19 @@
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "../helpers/auth schema/loginSchema";
+import { registerSchema } from "../helpers/auth schema/registerSchema";
+import { login } from "../api/authApi";
+import { register } from "../api/authApi";
+import { useEffect, useState } from "react";
+import Cookies from "universal-cookie";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function AuthForm({ btnText, type }) {
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const cookie = new Cookies();
+  const navigate = useNavigate();
+  const schema = type === "login" ? loginSchema : registerSchema;
   const defaultFormData =
     type === "login"
       ? {
@@ -17,23 +30,52 @@ export default function AuthForm({ btnText, type }) {
           gender: "",
         };
 
-  const { register: formData, handleSubmit } = useForm({
+  const {
+    register: formData,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: defaultFormData,
+    resolver: zodResolver(schema),
   });
-
-  function onSubmit(data) {
+  async function onSubmit(data) {
+    const loginData = { email: data.email, password: data.password };
+    const payload = {
+      ...data,
+      name: `${data.firstName} ${data.secondName}`.trim(),
+    };
     if (type === "register") {
-      const payload = {
-        ...data,
-        name: `${data.firstName} ${data.secondName}`.trim(),
-      };
-
       delete payload.firstName;
       delete payload.secondName;
       console.log(payload);
     }
 
-    console.log(data);
+    //handle send data to server
+
+    //login function
+    async function _login() {
+      const res = await login(loginData);
+      const token = res.data.token;
+      console.log("token", token);
+      cookie.set("Bearer", token);
+      navigate("/");
+    }
+    
+    try {
+      setLoading(true);
+      if (type === "login") {
+        _login();
+      } else {
+        await register(payload);
+
+        _login();
+        // navigate("/");
+      }
+    } catch (err) {
+      setErrorMessage(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -66,6 +108,9 @@ export default function AuthForm({ btnText, type }) {
             placeholder=" "
             required
           />
+          {errors.email && (
+            <p className="text-red-500">{errors.email.message}</p>
+          )}
           <label
             htmlFor="email"
             className="peer-focus:font-medium absolute text-sm text-gray-500 
@@ -92,6 +137,9 @@ export default function AuthForm({ btnText, type }) {
             placeholder=" "
             required
           />
+          {errors.password && (
+            <p className="text-red-500">{errors.password.message}</p>
+          )}
           <label
             htmlFor="password"
             className="peer-focus:font-medium absolute text-sm text-gray-500 
@@ -120,6 +168,9 @@ export default function AuthForm({ btnText, type }) {
                 placeholder=" "
                 required
               />
+              {errors.rePassword && (
+                <p className="text-red-500">{errors.rePassword.message}</p>
+              )}
               <label
                 htmlFor="rePassword"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 
@@ -147,6 +198,9 @@ export default function AuthForm({ btnText, type }) {
                   placeholder=" "
                   required
                 />
+                {errors.firstName && (
+                  <p className="text-red-500">{errors.firstName.message}</p>
+                )}
                 <label
                   htmlFor="firstName"
                   className="peer-focus:font-medium absolute text-sm text-gray-500 
@@ -171,6 +225,9 @@ export default function AuthForm({ btnText, type }) {
                   placeholder=" "
                   required
                 />
+                {errors.secondName && (
+                  <p className="text-red-500">{errors.secondName.message}</p>
+                )}
                 <label
                   htmlFor="secondName"
                   className="peer-focus:font-medium absolute text-sm text-gray-500 
@@ -197,6 +254,9 @@ export default function AuthForm({ btnText, type }) {
                   focus:ring-0 focus:border-purble peer"
                 required
               />
+              {errors.dateOfBirth && (
+                <p className="text-red-500">{errors.dateOfBirth.message}</p>
+              )}
               <label
                 htmlFor="dateOfBirth"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 
@@ -232,6 +292,9 @@ export default function AuthForm({ btnText, type }) {
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
+              {errors.gender && (
+                <p className="text-red-500">{errors.gender.message}</p>
+              )}
             </div>
           </>
         )}
@@ -242,9 +305,41 @@ export default function AuthForm({ btnText, type }) {
             font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center 
             dark:bg-purble dark:hover:bg-purple-700 dark:focus:ring-blue-800"
         >
-          {btnText}
+          {loading ? <i className="fa-solid fa-spinner fa-spin"></i> : btnText}
         </button>
+        {type === "login" && (
+          <p className="text-sm text-gray-600 dark:text-gray-300 mt-4">
+            Don’t have an account?
+            <NavLink
+              to="/register"
+              className="text-purble font-medium hover:underline"
+            >
+              Register Now
+            </NavLink>
+          </p>
+        )}
       </form>
+      {errorMessage && <ErrorMessage message={errorMessage} />}
+    </div>
+  );
+}
+
+export function ErrorMessage({ message }) {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-fit max-w-lg bg-red-500 text-white px-6 py-3 rounded-xl shadow-lg animate-bounce">
+      {message}
     </div>
   );
 }
