@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../helpers/auth schema/loginSchema";
 import { registerSchema } from "../helpers/auth schema/registerSchema";
 import { login } from "../api/authApi";
+import ErrorMessage from "./ErrorMessage";
 import { register } from "../api/authApi";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
@@ -324,22 +325,4 @@ export default function AuthForm({ btnText, type }) {
   );
 }
 
-export function ErrorMessage({ message }) {
-  const [visible, setVisible] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisible(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!visible) return null;
-
-  return (
-    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-fit max-w-lg bg-red-500 text-white px-6 py-3 rounded-xl shadow-lg animate-bounce">
-      {message}
-    </div>
-  );
-}

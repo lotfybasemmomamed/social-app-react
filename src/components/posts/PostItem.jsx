@@ -1,15 +1,22 @@
+import { useState } from "react";
 import { formatDate } from "../../helpers/formateDate";
 import { timeAgo } from "../../helpers/timeAge";
 import CommentList from "./CommentList";
 import CommentItem from "./CommentList";
+import { Navigate, useNavigate } from "react-router-dom";
+import { createComment } from "../../api/commentsApi";
 
-export default function PostItem({ postData }) {
+export default function PostItem({ postData, randomphotos }) {
+const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
   const {
-    _id,
+    id,
     body,
     createdAt,
     user: { name, photo },
   } = postData;
+
+
   return (
     <div className="bg-purple-200 p-6 rounded-2xl mx-4 md:mx-auto my-5 max-w-md md:max-w-2xl">
       <div className="flex bg-white shadow-lg rounded-lg">
@@ -28,12 +35,17 @@ export default function PostItem({ postData }) {
               </small>
             </div>
 
-            <p className="text-gray-700">
-              Created At {formatDate(createdAt)}.
-            </p>
+            <p className="text-gray-700">Created At {formatDate(createdAt)}.</p>
+            {/* img post &body */}
+            <div className="cursor-pointer" onClick={()=>navigate(`post/${id}`)}>
+            <div className="my-2 flex justify-center">
+              <img className="w-full rounded shadow-sm shadow-purple-500" src={randomphotos} alt={name} />
+            </div>
+
             <p className="mt-3 text-gray-700 text-sm">
               {body ? body : <p className="bg-red-300">No Content</p>}
             </p>
+            </div>
 
             <div className="mt-4 flex items-center">
               <div className="flex mr-2 text-gray-700 text-sm mr-3">
@@ -52,7 +64,10 @@ export default function PostItem({ postData }) {
                 </svg>
                 <span>12</span>
               </div>
-              <div className="flex mr-2 text-gray-700 text-sm mr-8 hover:text-purble cursor-pointer">
+              <div
+                onClick={() => setIsOpen((prev) => !prev)}
+                className="flex mr-2 text-gray-700 text-sm mr-8 hover:text-purble cursor-pointer"
+              >
                 <svg
                   fill="none"
                   viewBox="0 0 24 24"
@@ -86,12 +101,9 @@ export default function PostItem({ postData }) {
               </div>
             </div>
           </div>
-          
         </div>
-        
       </div>
-      <CommentList postId={_id}/>
-      
+      <CommentList postId={id} isOpen={isOpen} />
     </div>
   );
 }
