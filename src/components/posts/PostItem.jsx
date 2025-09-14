@@ -1,26 +1,42 @@
 import { useState } from "react";
 import { formatDate } from "../../helpers/formateDate";
 import { timeAgo } from "../../helpers/timeAge";
-import CommentList from "./CommentList";
-import CommentItem from "./CommentList";
-import { Navigate, useNavigate } from "react-router-dom";
-import { createComment } from "../../api/commentsApi";
+import CommentList from "../CommentList";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getComments } from "../../api/commentsApi";
+import { getLoggedUserData } from "../../api/getLoggedUser";
 
 export default function PostItem({ postData, randomphotos }) {
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(false);
   const {
     id,
     body,
     createdAt,
-    user: { name, photo },
+    user: { name, photo, _id },
   } = postData;
 
+  //get comments count
+  const { data } = useQuery({
+    queryKey: ["getComments", id],
+    queryFn: () => getComments(id),
+  });
+
+  const commentsCount = data?.data?.comments?.length;
+
+  //get logged user data
+  const { data: userData } = useQuery({
+    queryKey: ["loggedUserData"],
+    queryFn: () => getLoggedUserData(),
+  });
+  const loggedUserId = userData?.data?.user?._id;
+  const isOwner = loggedUserId == _id;
 
   return (
-    <div className="bg-purple-200 p-6 rounded-2xl mx-4 md:mx-auto my-5 max-w-md md:max-w-2xl">
+    <div className="bg-purple-200 p-6 rounded-2xl mx-4 md:mx-auto mt-5 max-w-md md:max-w-2xl">
       <div className="flex bg-white shadow-lg rounded-lg">
-        {/*horizantil margin is just for display*/}
         <div className="flex items-start px-4 py-6">
           <img
             className="w-12 h-12 rounded-full object-cover mr-4 shadow"
@@ -30,21 +46,88 @@ const navigate = useNavigate();
           <div>
             <div className="flex items-center justify-between gap-5">
               <h2 className="text-lg font-semibold text-gray-900 ">{name}</h2>
-              <small className="text-sm text-gray-700">
-                {timeAgo(createdAt)}
-              </small>
+
+              {/* DROP DOWN MENU */}
+              {isOwner && (
+                <div className="relative">
+                  <button
+                    onClick={() => setOpenDropdown((PREV) => !PREV)}
+                    className="inline-flex items-center p-2 text-sm font-medium text-center 
+                 text-gray-500 dark:text-gray-400 bg-white rounded-lg hover:bg-gray-100 
+                 focus:ring-4 focus:outline-none focus:ring-gray-50 
+                 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                    type="button"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 16 3"
+                    >
+                      <path
+                        d="M2 0a1.5 1.5 0 1 1 0 3 
+             1.5 1.5 0 0 1 0-3Zm6.041 
+             0a1.5 1.5 0 1 1 0 3 
+             1.5 1.5 0 0 1 0-3ZM14 
+             0a1.5 1.5 0 1 1 0 3 
+             1.5 1.5 0 0 1 0-3Z"
+                      />
+                    </svg>
+                  </button>
+
+                  {openDropdown && (
+                    <div
+                      className="absolute right-0 mt-1 z-10 w-36 bg-white rounded divide-y 
+                      divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
+                    >
+                      <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
+                        <li
+                          className="cursor-pointer"
+                          onClick={() => {
+                            console.log("Edit post", id);
+                            setOpenDropdown(null);
+                          }}
+                        >
+                          <a className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                            Edit
+                          </a>
+                        </li>
+                        <li
+                          className="cursor-pointer"
+                          onClick={() => {
+                            console.log("Remove post", id);
+                            setOpenDropdown(null);
+                          }}
+                        >
+                          <a className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                            Remove
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
-            <p className="text-gray-700">Created At {formatDate(createdAt)}.</p>
+            <p className="text-gray-700">Created At {formatDate(createdAt)}  <span className="text-gray-700">({timeAgo(createdAt)})</span>.</p>
             {/* img post &body */}
-            <div className="cursor-pointer" onClick={()=>navigate(`post/${id}`)}>
-            <div className="my-2 flex justify-center">
-              <img className="w-full rounded shadow-sm shadow-purple-500" src={randomphotos} alt={name} />
-            </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => navigate(`post/${id}`)}
+            >
+              <div className="my-2 flex justify-center">
+                <img
+                  className="w-full rounded shadow-sm shadow-purple-500"
+                  src={randomphotos}
+                  alt={name}
+                />
+              </div>
 
-            <p className="mt-3 text-gray-700 text-sm">
-              {body ? body : <p className="bg-red-300">No Content</p>}
-            </p>
+              <p className="mt-3 text-gray-700 text-sm">
+                {body ? body : <p className="bg-red-300">No Content</p>}
+              </p>
             </div>
 
             <div className="mt-4 flex items-center">
@@ -81,7 +164,7 @@ const navigate = useNavigate();
                     d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
                   />
                 </svg>
-                <span>8</span>
+                <span>{commentsCount}</span>
               </div>
               <div className="flex mr-2 text-gray-700 text-sm mr-4">
                 <svg

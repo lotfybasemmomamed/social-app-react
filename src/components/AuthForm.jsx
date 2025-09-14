@@ -302,7 +302,7 @@ export default function AuthForm({ btnText, type }) {
 
         <button
           type="submit"
-          className="text-white btn focus:ring-4 focus:outline-none focus:ring-purble-300 
+          className="cursor-pointer text-white btn focus:ring-4 focus:outline-none focus:ring-purble-300 
             font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center 
             dark:bg-purble dark:hover:bg-purple-700 dark:focus:ring-blue-800"
         >

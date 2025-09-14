@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   createComment,
   deleteComment,
   getComments,
   updateComment,
-} from "../../api/commentsApi";
+} from "../api/commentsApi";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { formatDate } from "../../helpers/formateDate";
-import Loading from "../Loading";
-import ErrorMessage from "../ErrorMessage";
-import { getLoggedUserData } from "../../api/getLoggedUser";
+import { formatDate } from "../helpers/formateDate";
+import Loading from "./Loading";
+import ErrorMessage from "./ErrorMessage";
+import { getLoggedUserData } from "../api/getLoggedUser";
+import { getPostById } from "../api/postsApi";
 
 export default function CommentList({ postId, isOpen }) {
   const [comment, setComment] = useState("");
@@ -20,7 +21,7 @@ export default function CommentList({ postId, isOpen }) {
     queryKey: ["getComments", postId],
     queryFn: () => getComments(postId),
   });
-  // console.log("comments", data?.data?.comments);
+  console.log("comments", data?.data?.comments);
 
   const comments = data?.data?.comments || [];
   const commentsItem = comments.map((comment, index) => {
@@ -104,7 +105,6 @@ export default function CommentList({ postId, isOpen }) {
   );
 }
 
-
 export function CommentItem({ comment }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -119,18 +119,30 @@ export function CommentItem({ comment }) {
   const { data: userData } = useQuery({
     queryKey: ["loggedUserData"],
     queryFn: () => getLoggedUserData(),
+    onSuccess: (data) => {
+      console.log("loggedUserData", data);
+    },
   });
+
   const loggedUserId = userData?.data?.user?._id;
-  const isOwner = loggedUserId === comment?.commentCreator?._id;
+  const isOwner = loggedUserId === comment?.commentCreator._id;
 
   // delete comment mutation
-  const { mutate: _deleteComment, isPending: deleting } = useMutation({
+  const {
+    mutate: _deleteComment,
+    isPending: deleting,
+    isError,
+  } = useMutation({
     mutationFn: (id) => deleteComment(id),
     onSuccess: () => {
+      setOpenDropdown(false);
       queryClient.invalidateQueries(["getComments"]);
     },
   });
 
+  useEffect(() => {
+    if (isError) setOpenDropdown(null);
+  }, [isError]);
   // edit comment mutation
   const { mutate: _updateComment, isPending: updating } = useMutation({
     mutationFn: ({ id, content }) => updateComment(id, { content }),
@@ -139,6 +151,9 @@ export function CommentItem({ comment }) {
       setIsEditing(false);
     },
   });
+  if (isError) {
+    return <ErrorMessage message="Owner of Post only can be delete comments" />;
+  }
 
   return (
     <article className="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
@@ -176,12 +191,14 @@ export function CommentItem({ comment }) {
                 fill="currentColor"
                 viewBox="0 0 16 3"
               >
-                <path d="M2 0a1.5 1.5 0 1 1 0 3 
+                <path
+                  d="M2 0a1.5 1.5 0 1 1 0 3 
                          1.5 1.5 0 0 1 0-3Zm6.041 
                          0a1.5 1.5 0 1 1 0 3 
                          1.5 1.5 0 0 1 0-3ZM14 
                          0a1.5 1.5 0 1 1 0 3 
-                         1.5 1.5 0 0 1 0-3Z"/>
+                         1.5 1.5 0 0 1 0-3Z"
+                />
               </svg>
             </button>
 

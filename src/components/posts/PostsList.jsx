@@ -1,38 +1,29 @@
-import { getAllPosts } from "../../api/postsApi";
 import { getRandomPhotos } from "../../api/randomPhotosApi";
-import ErrorMessage from "../ErrorMessage";
-import Loading from "../Loading";
-import PostItem from "./postItem";
+import PostItem from "./PostItem";
 import { useQuery } from "@tanstack/react-query";
 
-export default function PostsList() {
-  const { data, isLoading, isError,error } = useQuery({
-    queryKey: ["allPosts"],
-    queryFn: getAllPosts,
-  });
-   const { data: photosData } = useQuery({
+export default function PostsList({ posts }) {
+  const { data: photosData } = useQuery({
     queryKey: ["randomPhotos"],
     queryFn: getRandomPhotos,
   });
-
+  const normalizedPosts = Array.isArray(posts) ? posts : [posts];
   //get Random Photos
   async function _getRandowPhotos() {
     const randomPtotos = await getRandomPhotos();
     return randomPtotos;
   }
-    if (isLoading) return <Loading />;
-    if (isError) return <ErrorMessage message={error.message} />;
 
-  console.log("allPosts", data?.data.posts);
   return (
     <div>
-      {data?.data?.posts.map((post) => {
+      {normalizedPosts.map((post) => {
+        const randomPhoto =
+          photosData && photosData.length > 0
+            ? photosData[Math.floor(Math.random() * photosData.length)]
+            : null;
         return (
           <>
-            <PostItem
-              postData={post}
-              randomphotos={photosData[Math.floor(Math.random() * 101)]}
-            />
+            <PostItem postData={post} randomphotos={randomPhoto} />
           </>
         );
       })}
