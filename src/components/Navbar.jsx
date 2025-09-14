@@ -92,7 +92,7 @@ navigate("/login")
                 {navLinks.map(({ to, label, icon }) => (
                   <NavLink
                     key={to}
-                    href={to}
+                    to={to}
                     className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center space-x-2 group text-gray-700 hover:bg-purple-50 hover:text-purple-600"
                   >
                     <i
