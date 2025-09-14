@@ -48,7 +48,7 @@ export default function PostItem({ postData, randomphotos }) {
               <h2 className="text-lg font-semibold text-gray-900 ">{name}</h2>
 
               {/* DROP DOWN MENU */}
-              {isOwner && (
+              {/* {isOwner && (
                 <div className="relative">
                   <button
                     onClick={() => setOpenDropdown((PREV) => !PREV)}
@@ -108,7 +108,7 @@ export default function PostItem({ postData, randomphotos }) {
                     </div>
                   )}
                 </div>
-              )}
+              )} */}
             </div>
 
             <p className="text-gray-700">Created At {formatDate(createdAt)}  <span className="text-gray-700">({timeAgo(createdAt)})</span>.</p>

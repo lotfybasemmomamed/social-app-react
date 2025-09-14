@@ -10,7 +10,6 @@ import { formatDate } from "../helpers/formateDate";
 import Loading from "./Loading";
 import ErrorMessage from "./ErrorMessage";
 import { getLoggedUserData } from "../api/getLoggedUser";
-import { getPostById } from "../api/postsApi";
 
 export default function CommentList({ postId, isOpen }) {
   const [comment, setComment] = useState("");
