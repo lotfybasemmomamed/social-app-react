@@ -81,11 +81,10 @@ export default function UserProfile() {
           ) : (
             <>
               <div className="flex flex-col items-center justify-center text-center text-gray-600 py-12 min-h-[60vh]">
+                <div className="bg-purple-100 rounded shadow-2xl flex flex-col items-center justify-center w-full min-h-[80vh]">
                 <i className="fas fa-folder-open text-5xl text-purple-400 mb-4"></i>
-                <p className="text-lg font-medium">No posts yet</p>
-                <p className="text-sm text-gray-500 mt-1">
-                  Start sharing your first post 🚀
-                </p>
+                <p className="text-lg font-medium">You don't Added any posts</p>
+                </div>
               </div>
             </>
           )}
