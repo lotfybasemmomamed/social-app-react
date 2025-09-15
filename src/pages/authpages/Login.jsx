@@ -3,9 +3,9 @@ import AuthForm from "../../components/AuthForm";
 
 function Login() {
   return (
-    <div className="h-[100vh] flex items-center justify-center">
+    // <div className="flex items-center justify-center min-h-screen">
       <AuthForm type="login" btnText="Login" />
-    </div>
+    // </div>
   );
 }
 
