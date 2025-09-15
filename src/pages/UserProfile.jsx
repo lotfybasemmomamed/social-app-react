@@ -73,13 +73,21 @@ export default function UserProfile() {
           {data?.data?.posts && data.data.posts.length > 0 ? (
             data.data.posts.map((post, index) => (
               <PostItem
-                key={index} 
+                key={index}
                 postData={post}
                 randomphotos={photosData[Math.floor(Math.random() * 101)]}
               />
             ))
           ) : (
-            <p className="text-center text-gray-600 py-4">No posts yet</p>
+            <>
+              <div className="flex flex-col items-center justify-center text-center text-gray-600 py-12 min-h-[60vh]">
+                <i className="fas fa-folder-open text-5xl text-purple-400 mb-4"></i>
+                <p className="text-lg font-medium">No posts yet</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Start sharing your first post 🚀
+                </p>
+              </div>
+            </>
           )}
         </div>
       </div>
