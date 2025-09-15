@@ -324,13 +324,13 @@ export default function AuthForm({ btnText, type }) {
     //   {errorMessage && <ErrorMessage message={errorMessage} />}
     // </div>
    
-     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-purple-900 flex items-center justify-center p-4">
+     <div className="min-h-screen bg-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-purple-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md sm:max-w-lg my-auto">
         {/* Header Card */}
         <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-t-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 sm:p-8 shadow-xl">
           <div className="text-center">
             {/* Logo/Icon */}
-            <div className="mx-auto w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
+            <div className="mx-auto w-16 h-16 bg-purble rounded-full flex items-center justify-center mb-4 shadow-lg">
               <i className={`fas ${type === 'login' ? 'fa-sign-in-alt' : 'fa-user-plus'} text-white text-2xl`}></i>
             </div>
             
@@ -519,12 +519,12 @@ export default function AuthForm({ btnText, type }) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
+              className="w-full bg-purble hover:bg-purple-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
             >
               {loading ? (
                 <span className="flex items-center justify-center">
                   <i className="fas fa-spinner fa-spin mr-2"></i>
-                  Processing...
+                  
                 </span>
               ) : (
                 <span className="flex items-center justify-center">
